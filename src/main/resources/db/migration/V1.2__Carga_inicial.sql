@@ -1,0 +1,40 @@
+INSERT INTO DBPDDEV01.GER_ITEM(NM_ITEM, VL_UNITARIO) VALUES ('MOUSE', 60.35), ('TECLADO', 75.50);
+
+INSERT INTO DBPDDEV01.GER_CLIENTE(NM_CLIENTE, TP_DOCUMENTO, NR_DOCUMENTO) 
+  VALUES 
+    ('CLIENTE 1', 'PF', '32390552013'), 
+    ('CLIENTE 2', 'PF', '70365413003'), 
+    ('CLIENTE 3', 'PF', '17257080003'), 
+    ('CLIENTE 4', 'PF', '55902704057'), 
+    ('CLIENTE 5', 'PF', '70777448092'), 
+    ('CLIENTE 6', 'PF', '84133322061'), 
+    ('CLIENTE 7', 'PF', '27618084017'), 
+    ('CLIENTE 8', 'PF', '22423622082'), 
+    ('CLIENTE 9', 'PF', '43739668008'), 
+    ('CLIENTE 10', 'PF', '04190609013');
+    
+INSERT INTO DBPDDEV01.GER_PEDIDO(CD_CLIENTE, DT_CADASTRO)
+  VALUES
+    (1, CURDATE()),
+    (2, CURDATE()),
+    (3, CURDATE()),
+    (4, CURDATE()),
+    (5, CURDATE()),
+    (6, CURDATE()),
+    (7, CURDATE()),
+    (8, CURDATE()),
+    (9, CURDATE()),
+    (10, CURDATE());
+
+INSERT INTO DBPDDEV01.GER_PEDIDO_ITEM(CD_PEDIDO, CD_ITEM, QT_ITEM)
+  VALUES
+    (1, 1, 2),
+    (2, 1, 1),
+    (3, 2, 1),
+    (4, 2, 5),
+    (5, 1, 1),
+    (6, 2, 3),
+    (7, 1, 1),
+    (8, 2, 3),
+    (9, 1, 1),
+    (10, 2, 5);
