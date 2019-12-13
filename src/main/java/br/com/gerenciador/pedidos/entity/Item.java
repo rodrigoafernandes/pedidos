@@ -1,18 +1,20 @@
 package br.com.gerenciador.pedidos.entity;
 
 import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.TemporalType.DATE;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,22 +28,24 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@Table(name = "GER_PEDIDO")
-public class Pedido implements Serializable {
+@Table(name = "GER_ITEM")
+public class Item implements Serializable {
 
-	private static final long serialVersionUID = -216401458644677331L;
+	private static final long serialVersionUID = 3816258090884000247L;
 
 	@Id
-	@Column(name = "CD_PEDIDO")
+	@Column(name = "CD_ITEM")
 	@GeneratedValue(strategy = IDENTITY)
 	private Long codigo;
 	
-	@NotNull
-	@Column(name = "CD_CLIENTE")
-	private Long codigoCliente;
+	@NotBlank
+	@Length(max = 60)
+	@Column(name = "NM_ITEM")
+	private String nome;
 	
 	@NotNull
-	@Temporal(DATE)
-	@Column(name = "DT_CADASTRO")
-	private Calendar dataCadastro;
+	@Column(name = "VL_UNITARIO")
+	@Digits(integer = 18, fraction = 2)
+	private BigDecimal valorUnitario;
+	
 }

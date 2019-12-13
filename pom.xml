@@ -19,6 +19,7 @@
 		<java.version>1.8</java.version>
 		<commons-collections.version>4.1</commons-collections.version>
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
+		<mysema.version>1.0.4</mysema.version>
 		<jacoco.version>0.8.2</jacoco.version>
 		<checkstyle-maven-plugin.version>3.0.0</checkstyle-maven-plugin.version>
 		<pmd-maven-plugin.version>3.12.0</pmd-maven-plugin.version>
@@ -113,6 +114,23 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
+				<groupId>com.mysema.maven</groupId>
+				<artifactId>maven-apt-plugin</artifactId>
+				<version>${mysema.version}</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/generated-sources</outputDirectory>
+							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
 			<plugin>
@@ -141,7 +159,7 @@
 					<!-- Add this checking -->
 					<execution>
 						<id>jacoco-check</id>
-						<phase>test</phase>
+						<!-- <phase>test</phase> -->
 						<goals>
 							<goal>check</goal>
 						</goals>
@@ -168,6 +186,7 @@
 				<version>${checkstyle-maven-plugin.version}</version>
 				<configuration>
 					<configLocation>checkstyle.xml</configLocation>
+					<excludes>**/Q*.java</excludes>
 					<encoding>UTF-8</encoding>
 					<consoleOutput>true</consoleOutput>
 					<linkXRef>false</linkXRef>
@@ -189,6 +208,9 @@
 					<rulesets>
 						<ruleset>pmd-ruleset.xml</ruleset>
 					</rulesets>
+					<excludes>
+						<exclude>**/Q*.java</exclude>
+					</excludes>
 					<printFailingErrors>true</printFailingErrors>
 				</configuration>
 				<executions>

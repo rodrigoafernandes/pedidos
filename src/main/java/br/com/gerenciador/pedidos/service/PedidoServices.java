@@ -7,9 +7,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 
 import br.com.gerenciador.pedidos.converter.ParametersConverter;
-import br.com.gerenciador.pedidos.converter.PedidoConverter;
 import br.com.gerenciador.pedidos.dto.FiltroPedidosDTO;
 import br.com.gerenciador.pedidos.dto.PedidoDTO;
+import br.com.gerenciador.pedidos.exception.InvalidParametersException;
 import br.com.gerenciador.pedidos.repository.PedidoRepository;
 import br.com.gerenciador.pedidos.validator.ParametersValidator;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +21,23 @@ public class PedidoServices {
 	private final PedidoRepository pedidoRepository;
 	private final ParametersConverter parametersConverter;
 	private final ParametersValidator validator;
-	private final PedidoConverter converter;
 
 	public List<PedidoDTO> findPedidos(String numeroPedido, String dataCadastro, String nomeCliente) {
-		BindingResult bindingResult = new WebDataBinder(null).getBindingResult();
+		BindingResult bindingResult = new WebDataBinder(numeroPedido).getBindingResult();
 
 		FiltroPedidosDTO filtro = parametersConverter.convert(numeroPedido, dataCadastro, nomeCliente, bindingResult);
 
-		validator.validate(filtro);
-		
-		return converter.toDTO(pedidoRepository.findByFilter(filtro));
+		if (bindingResult.hasErrors()) {
+			throw new InvalidParametersException("Parâmetros de request inválidos", bindingResult.getAllErrors());
+		}
+
+		validator.validate(filtro, bindingResult);
+
+		if (bindingResult.hasErrors()) {
+			throw new InvalidParametersException("Parâmetros de request inválidos", bindingResult.getAllErrors());
+		}
+
+		return pedidoRepository.findByFilter(filtro);
 	}
 
 }

@@ -1,18 +1,20 @@
 package br.com.gerenciador.pedidos.entity;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.TemporalType.DATE;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,22 +28,29 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@Table(name = "GER_PEDIDO")
-public class Pedido implements Serializable {
+@Table(name = "GER_CLIENTE")
+public class Cliente implements Serializable {
 
-	private static final long serialVersionUID = -216401458644677331L;
+	private static final long serialVersionUID = 5976344362337295610L;
 
 	@Id
-	@Column(name = "CD_PEDIDO")
+	@Column(name = "CD_CLIENTE")
 	@GeneratedValue(strategy = IDENTITY)
 	private Long codigo;
 	
-	@NotNull
-	@Column(name = "CD_CLIENTE")
-	private Long codigoCliente;
+	@NotBlank
+	@Length(max = 100)
+	@Column(name = "NM_CLIENTE")
+	private String nome;
 	
 	@NotNull
-	@Temporal(DATE)
-	@Column(name = "DT_CADASTRO")
-	private Calendar dataCadastro;
+	@Enumerated(STRING)
+	@Column(name = "TP_DOCUMENTO")
+	private TipoDocumentoEnum tipoDocumento;
+	
+	@NotBlank
+	@Length(max = 14)
+	@Column(name = "NR_DOCUMENTO")
+	private String numeroDocumento;
+	
 }

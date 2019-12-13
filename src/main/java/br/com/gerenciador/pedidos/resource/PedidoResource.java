@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.gerenciador.pedidos.dto.ErrorDTO;
 import br.com.gerenciador.pedidos.dto.PedidoDTO;
 import br.com.gerenciador.pedidos.service.PedidoServices;
 import io.swagger.annotations.Api;
@@ -29,8 +30,8 @@ public class PedidoResource {
 	@GetMapping
 	@ApiOperation(value = "Busca Pedidos pelo filtro informado", tags = "Pedidos")
 	@ApiResponses({ @ApiResponse(code = 200, message = "OK", response = PedidoDTO[].class),
-			@ApiResponse(code = 204, message = "No Content"),
-			@ApiResponse(code = 422, message = "Unprocessable Entity", response = ObjectError[].class) })
+			@ApiResponse(code = 204, message = "No Content", response = ErrorDTO.class),
+			@ApiResponse(code = 412, message = "Unprocessable Entity", response = ObjectError[].class) })
 	public ResponseEntity<List<PedidoDTO>> findPedidos(
 			@RequestParam(value = "numeroPedido", required = false) String numeroPedido,
 			@ApiParam(format = "yyyy-MM-dd", type = "date") @RequestParam(value = "dataCadastro", required = false) String dataCadastro,
