@@ -30,7 +30,7 @@ public class PedidoResource {
 	@GetMapping
 	@ApiOperation(value = "Busca Pedidos pelo filtro informado", tags = "Pedidos")
 	@ApiResponses({ @ApiResponse(code = 200, message = "OK", response = PedidoDTO[].class),
-			@ApiResponse(code = 204, message = "No Content", response = ErrorDTO.class),
+			@ApiResponse(code = 404, message = "No Content", response = ErrorDTO.class),
 			@ApiResponse(code = 412, message = "Unprocessable Entity", response = ObjectError[].class) })
 	public ResponseEntity<List<PedidoDTO>> findPedidos(
 			@RequestParam(value = "numeroPedido", required = false) String numeroPedido,
