@@ -110,7 +110,6 @@
 			<groupId>ch.vorburger.mariaDB4j</groupId>
 			<artifactId>mariaDB4j</artifactId>
 			<version>${mariaDB4j.version}</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
