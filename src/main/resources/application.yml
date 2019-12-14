@@ -45,7 +45,6 @@ spring:
   datasource:
     username: root
     password:
-    url: jdbc:mariadb://localhost:3307/
   flyway:
     schemas: DBPDDEV01
 
@@ -55,5 +54,9 @@ gerenciador:
       name: DBPDDEV01
 
 mariaDB4j:
-  dataDir: ./data/local
-  port: 3307
+  dataDir:
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
