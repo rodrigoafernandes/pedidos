@@ -4,9 +4,6 @@ spring:
   main:
     banner-mode: 'off'
   datasource:
-    username: SVC_PED
-    password: gerenciadorsvcped2019
-    url: jdbc:mariadb://192.168.10.46:3306/DBPDDEV01
     driver-class-name: org.mariadb.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
@@ -33,4 +30,30 @@ spring:
     password: ${spring.datasource.password}
     table: GER_MGT_HST
     baseline-on-migrate: true
-  
+
+---
+spring:
+  profiles: ti
+  datasource:
+    username: SVC_PED
+    password: gerenciadorsvcped2019
+    url: jdbc:mariadb://192.168.10.46:3306/DBPDDEV01
+
+---
+spring:
+  profiles: test-db
+  datasource:
+    username: root
+    password:
+    url: jdbc:mariadb://localhost:3307/
+  flyway:
+    schemas: DBPDDEV01
+
+gerenciador:
+  pedidos:
+    database:
+      name: DBPDDEV01
+
+mariaDB4j:
+  dataDir: ./data/local
+  port: 3307

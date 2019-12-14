@@ -147,6 +147,8 @@
 				<configuration>
 					<excludes>
 						<exclude>**/dto/*.*</exclude>
+						<exclude>**/entity/*.*</exclude>
+						<exclude>**/entity/embedded/*.*</exclude>
 						<exclude>**/PedidosApplication.*</exclude>
 					</excludes>
 				</configuration>
@@ -173,7 +175,7 @@
 						<configuration>
 							<rules>
 								<rule>
-									<element>PACKAGE</element>
+									<element>CLASS</element>
 									<limits>
 										<limit>
 											<counter>LINE</counter>
@@ -226,6 +228,25 @@
 						<goals>
 							<goal>check</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${basedir}/target/generated-sources</source>
+							</sources>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
