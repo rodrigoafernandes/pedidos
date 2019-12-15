@@ -10,9 +10,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-
-import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
@@ -30,14 +30,15 @@ import br.com.gerenciador.pedidos.entity.QPedidoItem;
 import br.com.gerenciador.pedidos.exception.ItensPedidoNotFoundException;
 import br.com.gerenciador.pedidos.exception.PedidosNotFoundException;
 import br.com.gerenciador.pedidos.repository.PedidoRepository;
-import lombok.RequiredArgsConstructor;
 
-@Repository
-@RequiredArgsConstructor
+@RequestScoped
 public class PedidoRepositoryImpl implements PedidoRepository {
 
-	private final EntityManager entityManager;
-	private final PedidoConverter converter;
+	@Inject
+	EntityManager entityManager;
+
+	@Inject
+	PedidoConverter converter;
 
 	@Override
 	public List<PedidoDTO> findByFilter(FiltroPedidosDTO filtro) {

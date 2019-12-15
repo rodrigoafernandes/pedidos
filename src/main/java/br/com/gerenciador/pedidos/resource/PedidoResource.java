@@ -2,41 +2,47 @@ package br.com.gerenciador.pedidos.resource;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import br.com.gerenciador.pedidos.dto.ErrorDTO;
 import br.com.gerenciador.pedidos.dto.PedidoDTO;
 import br.com.gerenciador.pedidos.service.PedidoServices;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import lombok.RequiredArgsConstructor;
 
-@RestController
-@RequiredArgsConstructor
-@RequestMapping(value = "/pedidos")
-@Api(value = "Serviços referente aos Pedidos", tags = "Pedidos")
+import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
+@Path(value = "/pedidos")
 public class PedidoResource {
 
-	private final PedidoServices services;
+	@Inject
+	PedidoServices services;
 
-	@GetMapping
-	@ApiOperation(value = "Busca Pedidos pelo filtro informado", tags = "Pedidos")
-	@ApiResponses({ @ApiResponse(code = 200, message = "OK", response = PedidoDTO[].class),
-			@ApiResponse(code = 404, message = "Not found", response = ErrorDTO.class),
-			@ApiResponse(code = 412, message = "Precondition Failed", response = ObjectError[].class) })
-	public ResponseEntity<List<PedidoDTO>> findPedidos(
-			@RequestParam(value = "numeroPedido", required = false) String numeroPedido,
-			@ApiParam(format = "yyyy-MM-dd", type = "date") @RequestParam(value = "dataCadastro", required = false) String dataCadastro,
-			@RequestParam(value = "nomeCliente", required = false) String nomeCliente) {
-		return ResponseEntity.ok(services.findPedidos(numeroPedido, dataCadastro, nomeCliente));
+	@GET
+	@Tag(name = "Pedidos")
+	@Produces(APPLICATION_JSON)
+	@Operation(description = "Busca Pedidos pelo filtro informado")
+	@APIResponses({ @APIResponse(responseCode = "200", description = "OK",
+			content = @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = PedidoDTO[].class))),
+			@APIResponse(responseCode = "404", description = "Not found",
+					content = @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = ErrorDTO.class))),
+			@APIResponse(responseCode = "412", description = "Precondition Failed",
+					content = @Content(mediaType = APPLICATION_JSON,
+							schema = @Schema(implementation = ConstraintViolation[].class))) })
+	public List<PedidoDTO> findPedidos(@QueryParam("numeroPedido") String numeroPedido,
+									   @QueryParam("dataCadastro") String dataCadastro,
+									   @QueryParam("nomeCliente") String nomeCliente) {
+		return services.findPedidos(numeroPedido, dataCadastro, nomeCliente);
 	}
 
 }

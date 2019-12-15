@@ -1,40 +1,47 @@
 package br.com.gerenciador.pedidos.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-
 import br.com.gerenciador.pedidos.converter.ParametersConverter;
 import br.com.gerenciador.pedidos.dto.FiltroPedidosDTO;
 import br.com.gerenciador.pedidos.dto.PedidoDTO;
 import br.com.gerenciador.pedidos.exception.InvalidParametersException;
 import br.com.gerenciador.pedidos.repository.PedidoRepository;
 import br.com.gerenciador.pedidos.validator.ParametersValidator;
-import lombok.RequiredArgsConstructor;
 
-@Service
-@RequiredArgsConstructor
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+
+@RequestScoped
 public class PedidoServices {
 
-	private final PedidoRepository pedidoRepository;
-	private final ParametersConverter parametersConverter;
-	private final ParametersValidator validator;
+	@Inject
+	PedidoRepository pedidoRepository;
+
+	@Inject
+	ParametersConverter parametersConverter;
+
+	@Inject
+	ParametersValidator validator;
 
 	public List<PedidoDTO> findPedidos(String numeroPedido, String dataCadastro, String nomeCliente) {
-		BindingResult bindingResult = new WebDataBinder(numeroPedido).getBindingResult();
+		Set<ConstraintViolation<FiltroPedidosDTO>> constraintViolations = new HashSet<>();
 
-		FiltroPedidosDTO filtro = parametersConverter.convert(numeroPedido, dataCadastro, nomeCliente, bindingResult);
+		FiltroPedidosDTO filtro = parametersConverter.convert(numeroPedido, dataCadastro, nomeCliente,
+				constraintViolations);
 
-		if (bindingResult.hasErrors()) {
-			throw new InvalidParametersException("Parâmetros de request inválidos", bindingResult.getAllErrors());
+		if (isNotEmpty(constraintViolations)) {
+			throw new InvalidParametersException("Parâmetros de request inválidos", constraintViolations);
 		}
 
-		validator.validate(filtro, bindingResult);
+		validator.validate(filtro, constraintViolations);
 
-		if (bindingResult.hasErrors()) {
-			throw new InvalidParametersException("Parâmetros de request inválidos", bindingResult.getAllErrors());
+		if (isNotEmpty(constraintViolations)) {
+			throw new InvalidParametersException("Parâmetros de request inválidos", constraintViolations);
 		}
 
 		return pedidoRepository.findByFilter(filtro);

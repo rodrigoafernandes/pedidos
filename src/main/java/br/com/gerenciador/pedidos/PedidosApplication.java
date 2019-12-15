@@ -1,13 +1,12 @@
 package br.com.gerenciador.pedidos;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
+import org.eclipse.microprofile.openapi.annotations.info.Info;
 
-@SpringBootApplication
-public class PedidosApplication {
+import javax.ws.rs.core.Application;
 
-	public static void main(String[] args) {
-		SpringApplication.run(PedidosApplication.class, args);
-	}
+@OpenAPIDefinition(info = @Info(title = "API Pedidos", version = "0.1.0",
+		description = "Documentação da API de consulta de pedidos gerados"))
+public class PedidosApplication extends Application {
 
 }

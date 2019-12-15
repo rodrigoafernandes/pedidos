@@ -1,5 +1,16 @@
 package br.com.gerenciador.pedidos.converter;
 
+import br.com.gerenciador.pedidos.dto.ItemPedidoDTO;
+import br.com.gerenciador.pedidos.dto.PedidoDTO;
+import com.querydsl.core.Tuple;
+
+import javax.enterprise.context.RequestScoped;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import static java.math.BigDecimal.ZERO;
 import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.MONTH;
@@ -8,20 +19,7 @@ import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_TWO;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ZERO;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.querydsl.core.Tuple;
-
-import br.com.gerenciador.pedidos.dto.ItemPedidoDTO;
-import br.com.gerenciador.pedidos.dto.PedidoDTO;
-
-@Component
+@RequestScoped
 public class PedidoConverter {
 
 	public List<PedidoDTO> toPedidoDTO(List<Tuple> results) {

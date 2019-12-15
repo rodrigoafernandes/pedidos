@@ -4,14 +4,10 @@ import br.com.gerenciador.pedidos.dto.FiltroPedidosDTO;
 import br.com.gerenciador.pedidos.dto.ItemPedidoDTO;
 import br.com.gerenciador.pedidos.dto.PedidoDTO;
 import br.com.gerenciador.pedidos.repository.PedidoRepository;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;

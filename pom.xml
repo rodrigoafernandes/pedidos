@@ -3,70 +3,68 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.2.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
-	</parent>
 	<groupId>br.com.gerenciador</groupId>
 	<artifactId>pedidos</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>pedidos</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Projeto para implemetacao do Teste de gerenciamento de pedidos</description>
 
 	<properties>
 		<java.version>1.8</java.version>
+		<quarkus.version>1.0.1.Final</quarkus.version>
 		<commons-collections.version>4.1</commons-collections.version>
-		<springfox-swagger.version>2.9.2</springfox-swagger.version>
+		<lombok.version>1.18.10</lombok.version>
+		<querydsl.version>4.2.2</querydsl.version>
 		<mysema.version>1.0.4</mysema.version>
-		<mariaDB4j.version>2.4.0</mariaDB4j.version>
+		<mockito-core.version>2.21.0</mockito-core.version>
+		<mockito-junit-jupiter.version>2.23.0</mockito-junit-jupiter.version>
 		<jacoco.version>0.8.2</jacoco.version>
+		<docker-plugin.version>0.28.0</docker-plugin.version>
+		<mariadb.password>gerenciadorsvcped2019</mariadb.password>
 		<checkstyle-maven-plugin.version>3.0.0</checkstyle-maven-plugin.version>
 		<pmd-maven-plugin.version>3.12.0</pmd-maven-plugin.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-resteasy-jsonb</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-hibernate-validator</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-smallrye-openapi</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-smallrye-health</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-hibernate-orm-panache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-jdbc-mariadb</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
+			<version>${querydsl.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-sql</artifactId>
 			<version>${querydsl.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+			<version>${lombok.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -78,46 +76,79 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-flyway</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>${springfox-swagger.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>${springfox-swagger.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-junit5</artifactId>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>ch.vorburger.mariaDB4j</groupId>
-			<artifactId>mariaDB4j</artifactId>
-			<version>${mariaDB4j.version}</version>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<version>${mockito-junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito-core.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.quarkus</groupId>
+				<artifactId>quarkus-bom</artifactId>
+				<version>${quarkus.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>io.quarkus</groupId>
+				<artifactId>quarkus-maven-plugin</artifactId>
+				<version>${quarkus.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<systemProperties>
+						<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+					</systemProperties>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.jandex</groupId>
+				<artifactId>jandex-maven-plugin</artifactId>
+				<version>1.0.7</version>
+				<executions>
+					<execution>
+						<id>make-index</id>
+						<goals>
+							<goal>jandex</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
@@ -167,7 +198,7 @@
 					<!-- Add this checking -->
 					<execution>
 						<id>jacoco-check</id>
-						<phase>test</phase>
+<!--						<phase>test</phase>-->
 						<goals>
 							<goal>check</goal>
 						</goals>
@@ -188,6 +219,66 @@
 					</execution>
 				</executions>
 			</plugin>
+<!--			<plugin>-->
+<!--				&lt;!&ndash; Automatically start PostgreSQL for integration testing - requires Docker &ndash;&gt;-->
+<!--				<groupId>io.fabric8</groupId>-->
+<!--				<artifactId>docker-maven-plugin</artifactId>-->
+<!--				<version>${docker-plugin.version}</version>-->
+<!--				<configuration>-->
+<!--					<skip>${skipTests}</skip>-->
+<!--					<images>-->
+<!--						<image>-->
+<!--							<name>mariadb</name>-->
+<!--							<alias>mariadb</alias>-->
+<!--							<build>-->
+<!--								<from>mariadb:latest</from>-->
+<!--								<assembly>-->
+<!--									<mode>dir</mode>-->
+<!--									&lt;!&ndash; database startup script &ndash;&gt;-->
+<!--									<targetDir>/docker-entrypoint-initdb.d</targetDir>-->
+<!--									<inline>-->
+<!--										<files>-->
+<!--											<file>-->
+<!--												<source>src/test/docker/setup-mariadb.sql</source>-->
+<!--											</file>-->
+<!--										</files>-->
+<!--									</inline>-->
+<!--								</assembly>-->
+<!--								<env>-->
+<!--									<MYSQL_ROOT_PASSWORD>${mariadb.password}</MYSQL_ROOT_PASSWORD>-->
+<!--								</env>-->
+<!--							</build>-->
+<!--							<run>-->
+<!--								&lt;!&ndash; Wait for database up and running &ndash;&gt;-->
+<!--								<wait>-->
+<!--									<tcp>-->
+<!--										<ports>-->
+<!--											<port>3306</port>-->
+<!--										</ports>-->
+<!--									</tcp>-->
+<!--								</wait>-->
+<!--							</run>-->
+<!--						</image>-->
+<!--					</images>-->
+<!--				</configuration>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>docker-start</id>-->
+<!--						<phase>test-compile</phase>-->
+<!--						<goals>-->
+<!--							<goal>stop</goal>-->
+<!--							<goal>start</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--					<execution>-->
+<!--						<id>docker-stop</id>-->
+<!--						<phase>post-integration-test</phase>-->
+<!--						<goals>-->
+<!--							<goal>stop</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -249,7 +340,24 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>8</source>
+					<target>8</target>
+				</configuration>
+			</plugin>
 		</plugins>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
 	</build>
 
 	<reporting>
@@ -274,5 +382,50 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
+	<profiles>
+		<profile>
+			<id>native</id>
+			<activation>
+				<property>
+					<name>native</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.quarkus</groupId>
+						<artifactId>quarkus-maven-plugin</artifactId>
+						<version>${quarkus.version}</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>native-image</goal>
+								</goals>
+								<configuration>
+									<enableHttpUrlHandler>true</enableHttpUrlHandler>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>${surefire-plugin.version}</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+								<configuration>
+									<systemProperties>
+										<native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+									</systemProperties>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
