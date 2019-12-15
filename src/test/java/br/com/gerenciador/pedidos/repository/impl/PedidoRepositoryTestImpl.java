@@ -3,7 +3,9 @@ package br.com.gerenciador.pedidos.repository.impl;
 import br.com.gerenciador.pedidos.dto.FiltroPedidosDTO;
 import br.com.gerenciador.pedidos.dto.ItemPedidoDTO;
 import br.com.gerenciador.pedidos.dto.PedidoDTO;
+import br.com.gerenciador.pedidos.exception.PedidosNotFoundException;
 import br.com.gerenciador.pedidos.repository.PedidoRepository;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,6 +44,11 @@ public class PedidoRepositoryTestImpl implements PedidoRepository {
             results = results.stream().filter(pedido -> pedido.getCliente().equalsIgnoreCase(filtro.getNomeCliente()))
                     .collect(toList());
         }
+
+        if (CollectionUtils.isEmpty(results)) {
+            throw new PedidosNotFoundException("Pedidos nao localizados para o filtro informado");
+        }
+
         return results;
     }
 }

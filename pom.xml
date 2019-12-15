@@ -19,8 +19,8 @@
 		<mockito-core.version>2.21.0</mockito-core.version>
 		<mockito-junit-jupiter.version>2.23.0</mockito-junit-jupiter.version>
 		<jacoco.version>0.8.2</jacoco.version>
-		<docker-plugin.version>0.28.0</docker-plugin.version>
-		<mariadb.password>gerenciadorsvcped2019</mariadb.password>
+		<surefire-plugin.version>2.22.1</surefire-plugin.version>
+		<compiler-plugin.version>3.8.1</compiler-plugin.version>
 		<checkstyle-maven-plugin.version>3.0.0</checkstyle-maven-plugin.version>
 		<pmd-maven-plugin.version>3.12.0</pmd-maven-plugin.version>
 	</properties>
@@ -44,7 +44,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-hibernate-orm-panache</artifactId>
+			<artifactId>quarkus-hibernate-orm</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
@@ -89,18 +89,6 @@
 			<artifactId>rest-assured</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-junit-jupiter</artifactId>
-			<version>${mockito-junit-jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>${mockito-core.version}</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -130,7 +118,17 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${compiler-plugin.version}</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<parameters>true</parameters>
+				</configuration>
+			</plugin>
+			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire-plugin.version}</version>
 				<configuration>
 					<systemProperties>
 						<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
@@ -168,9 +166,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>${jacoco.version}</version>
@@ -198,7 +193,7 @@
 					<!-- Add this checking -->
 					<execution>
 						<id>jacoco-check</id>
-<!--						<phase>test</phase>-->
+						<phase>test</phase>
 						<goals>
 							<goal>check</goal>
 						</goals>
@@ -219,66 +214,6 @@
 					</execution>
 				</executions>
 			</plugin>
-<!--			<plugin>-->
-<!--				&lt;!&ndash; Automatically start PostgreSQL for integration testing - requires Docker &ndash;&gt;-->
-<!--				<groupId>io.fabric8</groupId>-->
-<!--				<artifactId>docker-maven-plugin</artifactId>-->
-<!--				<version>${docker-plugin.version}</version>-->
-<!--				<configuration>-->
-<!--					<skip>${skipTests}</skip>-->
-<!--					<images>-->
-<!--						<image>-->
-<!--							<name>mariadb</name>-->
-<!--							<alias>mariadb</alias>-->
-<!--							<build>-->
-<!--								<from>mariadb:latest</from>-->
-<!--								<assembly>-->
-<!--									<mode>dir</mode>-->
-<!--									&lt;!&ndash; database startup script &ndash;&gt;-->
-<!--									<targetDir>/docker-entrypoint-initdb.d</targetDir>-->
-<!--									<inline>-->
-<!--										<files>-->
-<!--											<file>-->
-<!--												<source>src/test/docker/setup-mariadb.sql</source>-->
-<!--											</file>-->
-<!--										</files>-->
-<!--									</inline>-->
-<!--								</assembly>-->
-<!--								<env>-->
-<!--									<MYSQL_ROOT_PASSWORD>${mariadb.password}</MYSQL_ROOT_PASSWORD>-->
-<!--								</env>-->
-<!--							</build>-->
-<!--							<run>-->
-<!--								&lt;!&ndash; Wait for database up and running &ndash;&gt;-->
-<!--								<wait>-->
-<!--									<tcp>-->
-<!--										<ports>-->
-<!--											<port>3306</port>-->
-<!--										</ports>-->
-<!--									</tcp>-->
-<!--								</wait>-->
-<!--							</run>-->
-<!--						</image>-->
-<!--					</images>-->
-<!--				</configuration>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<id>docker-start</id>-->
-<!--						<phase>test-compile</phase>-->
-<!--						<goals>-->
-<!--							<goal>stop</goal>-->
-<!--							<goal>start</goal>-->
-<!--						</goals>-->
-<!--					</execution>-->
-<!--					<execution>-->
-<!--						<id>docker-stop</id>-->
-<!--						<phase>post-integration-test</phase>-->
-<!--						<goals>-->
-<!--							<goal>stop</goal>-->
-<!--						</goals>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -340,24 +275,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>8</source>
-					<target>8</target>
-				</configuration>
-			</plugin>
 		</plugins>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<includes>
-					<include>**/*.properties</include>
-				</includes>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
 	</build>
 
 	<reporting>
