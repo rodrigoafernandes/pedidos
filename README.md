@@ -5,7 +5,7 @@ Neste repositório está a implementação para o teste de API de consulta de pe
 Tecnologias utilizadas:
 
 * [Java 1.8](https://openjdk.java.net/install/)
-* [Spring Boot 2.2.2.RELEASE](https://spring.io/projects/spring-boot)
+* [Quarkus](https://quarkus.io/)
 * [mariaDB](https://mariadb.org/)
 * [QueryDSL](http://www.querydsl.com/)
 * [Lombok](https://projectlombok.org/)
@@ -23,11 +23,11 @@ Para buildar a aplicação, basta utilizar o comando: <br/>
 <code>./mvnw clean package</code>
 
 ### Executando a aplicação
-Após compilar e gerar o artefato, a aplicação poderá ser executada utilizando o seguinte comando: 
-<code>java -Dspring.profiles.active=ti -Dserver.port=8080 -jar target/pedidos-0.0.1-SNAPSHOT.jar</code><br/>
-Este comando inicializará a aplicação utilizando o hostname: localhost, inicializando também uma instancia do banco de dados MariaDB de forma "embeddable".<br/>
-Para executar a aplicação utilizando outro profile, deverá ser informado os seguintes parâmetros para inicialização da aplicação:<br/> <code>-Dspring.profiles.active={profile desejado} -Dspring.datasource.username={usuário do banco de dados} -Dspring.datasource.password={password do usuário de banco de dados} -Dspring.datasource.url={url de conexão jdbc com o banco de dados}</code><br/>
-O usuário de banco de dados deve possuir permissão para criar, alterar e deletar objetos do banco de dados, assim como permissão para leitura e escrita de registros.<br/>
+Para rodar a aplicação em modo <code>dev</code>, executar o comando.<br/>
+<code>./mvnw compile quarkus:dev</code><br/>
+Para utilizar a aplicação como um container Docker, primeiro build o container e na sequência execute o container.<br/>
+<code>docker build -f Dockerfile -t gerenciador/pedidos:0.1.0 .<br/>
+docker container run -d --name pedidos -p 8080:8080 gerenciador/pedidos:0.1.0</code><br/>
 
 ### Testando a aplicação
 Para testar a aplicação, poderá ser utilizado a própria documentação Swagger, utilizar o comando <code>curl</code> ou ferramentas para testes de serviços web, como o [Postman](https://www.getpostman.com/) por exemplo.
