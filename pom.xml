@@ -18,11 +18,13 @@
 		<mysema.version>1.0.4</mysema.version>
 		<mockito-core.version>3.1.0</mockito-core.version>
 		<mockito-junit-jupiter.version>3.1.0</mockito-junit-jupiter.version>
+		<testcontaines.version>1.12.3</testcontaines.version>
 		<jacoco.version>0.8.2</jacoco.version>
 		<surefire-plugin.version>2.22.1</surefire-plugin.version>
 		<compiler-plugin.version>3.8.1</compiler-plugin.version>
 		<checkstyle-maven-plugin.version>3.0.0</checkstyle-maven-plugin.version>
 		<pmd-maven-plugin.version>3.12.0</pmd-maven-plugin.version>
+		<jandex-maven-plugin.version>1.0.7</jandex-maven-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -101,6 +103,12 @@
 			<version>${mockito-core.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>mariadb</artifactId>
+			<version>${testcontaines.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -150,7 +158,7 @@
 			<plugin>
 				<groupId>org.jboss.jandex</groupId>
 				<artifactId>jandex-maven-plugin</artifactId>
-				<version>1.0.7</version>
+				<version>${jandex-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>make-index</id>
