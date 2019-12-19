@@ -58,6 +58,16 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.microprofile-ext.config-ext</groupId>
+			<artifactId>configsource-consul</artifactId>
+			<version>1.0.9</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-vault</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
 			<version>${querydsl.version}</version>
