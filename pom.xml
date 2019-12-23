@@ -58,12 +58,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.microprofile-ext.config-ext</groupId>
-			<artifactId>configsource-consul</artifactId>
-			<version>1.0.9</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-vault</artifactId>
 		</dependency>
@@ -96,6 +90,7 @@
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-flyway</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-junit5</artifactId>
@@ -116,12 +111,6 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>${mockito-core.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>vault</artifactId>
-			<version>1.12.3</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -310,6 +299,61 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${docker-plugin.version}</version>
+				<configuration>
+					<skip>${skipTests}</skip>
+					<images>
+						<image>
+							<name>vault:latest</name>
+							<alias>vault</alias>
+							<run>
+								<privileged>true</privileged>
+								<env>
+									<VAULT_DEV_ROOT_TOKEN_ID>my-root-token</VAULT_DEV_ROOT_TOKEN_ID>
+									<VAULT_DEV_LISTEN_ADDRESS>0.0.0.0:8200</VAULT_DEV_LISTEN_ADDRESS>
+								</env>
+								<ports>
+									<port>8200:8200</port>
+								</ports>
+								<log>
+									<prefix>Vault: </prefix>
+									<date>default</date>
+									<color>cyan</color>
+								</log>
+								<wait>
+									<tcp>
+										<mode>mapped</mode>
+										<ports>
+											<port>8200</port>
+										</ports>
+									</tcp>
+									<time>10000</time>
+								</wait>
+							</run>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>docker-start</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>stop</goal>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>docker-stop</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -381,5 +425,50 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+            <id>eclipse</id>
+            <activation>
+                <property>
+                    <!-- This is a trick to have the profile automatically activated by Eclipse -->
+                    <name>m2e.version</name>
+                </property>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                        <plugin>
+                            <groupId>org.eclipse.m2e</groupId>
+                            <artifactId>lifecycle-mapping</artifactId>
+                            <version>1.0.0</version>
+                            <configuration>
+                                <lifecycleMappingMetadata>
+                                    <pluginExecutions>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>io.fabric8</groupId>
+                                                <artifactId>
+                                                    docker-maven-plugin
+                                                </artifactId>
+                                                <versionRange>
+                                                    [0.28.0,)
+                                                </versionRange>
+                                                <goals>
+                                                    <goal>start</goal>
+                                                    <goal>stop</goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <ignore></ignore>
+                                            </action>
+                                        </pluginExecution>
+                                    </pluginExecutions>
+                                </lifecycleMappingMetadata>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
 	</profiles>
 </project>

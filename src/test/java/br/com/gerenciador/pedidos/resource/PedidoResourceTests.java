@@ -1,9 +1,7 @@
 package br.com.gerenciador.pedidos.resource;
 
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.vault.VaultContainer;
 
 import java.time.LocalDate;
 
@@ -13,12 +11,6 @@ import static org.apache.http.HttpStatus.*;
 
 @QuarkusTest
 public class PedidoResourceTests {
-
-    @ClassRule
-    public static VaultContainer vaultContainer = new VaultContainer<>()
-            .withVaultToken("my-root-token")
-            .withVaultPort(8200)
-            .withSecretInVault("secret/pedidos/datasource", "password=gerenciadorsvcped2019");
 
     @Test
     public void givenValidRequestParameters_whenSearchPedidos_thenShouldReturnsHttpStatusOk() {

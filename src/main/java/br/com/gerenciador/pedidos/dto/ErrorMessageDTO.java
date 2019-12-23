@@ -17,7 +17,9 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class ErrorMessageDTO implements Serializable {
 
-    private String property;
+	private static final long serialVersionUID = 1384823612389023364L;
+
+	private String property;
 
     private String message;
 
