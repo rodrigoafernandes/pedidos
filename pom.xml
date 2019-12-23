@@ -25,6 +25,7 @@
 		<checkstyle-maven-plugin.version>3.0.0</checkstyle-maven-plugin.version>
 		<pmd-maven-plugin.version>3.12.0</pmd-maven-plugin.version>
 		<jandex-maven-plugin.version>1.0.7</jandex-maven-plugin.version>
+		<configsource-consul.version>1.0.9</configsource-consul.version>
 	</properties>
 
 	<dependencies>
@@ -56,6 +57,12 @@
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-jdbc-h2</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.microprofile-ext.config-ext</groupId>
+			<artifactId>configsource-consul</artifactId>
+			<version>${configsource-consul.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
