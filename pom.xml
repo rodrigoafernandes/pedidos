@@ -206,6 +206,7 @@
 						<exclude>**/entity/*.*</exclude>
 						<exclude>**/entity/embedded/*.*</exclude>
 						<exclude>**/PedidosApplication.*</exclude>
+						<exclude>**/health/*.*</exclude>
 					</excludes>
 				</configuration>
 				<executions>
