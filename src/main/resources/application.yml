@@ -1,10 +1,11 @@
 spring:
-  application:
-    name: gerenciador-pedidos
   main:
     banner-mode: 'off'
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${datasource.url}
+    driver-class-name: ${datasource.driver}
+    username: ${datasource.username}
+    password: ${password}
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       pool-name: ${spring.application.name}-ConnectionPool
@@ -28,27 +29,8 @@ spring:
     url: ${spring.datasource.url}
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
-    table: GER_MGT_HST
+    table: ${flyway.table}
     baseline-on-migrate: true
-
----
-spring:
-  profiles: ti
-  datasource:
-    username: root
-    password:
-    url: jdbc:mariadb://localhost:3306/
-  flyway:
-    schemas: DBPDDEV01
-
-gerenciador:
-  pedidos:
-    database:
-      name: DBPDDEV01
-
-mariaDB4j:
-  dataDir:
-  port: 3306
 
 ---
 spring:
@@ -58,7 +40,10 @@ spring:
     password:
   flyway:
     schemas: DBPDDEV01
-
+datasource:
+  driver: org.mariadb.jdbc.Driver
+flyway:
+  table: GER_MGT_HST
 gerenciador:
   pedidos:
     database:

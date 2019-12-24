@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: pedidos
+  cloud:
+    vault:
+      enabled: false
+    consul:
+      config:
+        enabled: false
+
+---
+spring:
+  profiles: ti, qa, prod
+  cloud:
+    vault:
+      enabled: true
+      generic:
+        enabled: true
+        application-name: ${spring.application.name}
+        default-context: ${spring.application.name}/datasource
+      token: ${VAULT_SECURITY_TOKEN}
+      scheme: ${VAULT_SCHEME}
+      host: ${VAULT_HOST}
+      fail-fast: false
+    consul:
+      host: ${CONSUL_HOST}
+      port: ${CONSUL_PORT}
+      config:
+        enabled: true
+        prefix: ${spring.application.name}
+        default-context: config
+        fail-fast: true

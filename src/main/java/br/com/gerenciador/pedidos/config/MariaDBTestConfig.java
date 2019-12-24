@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 import javax.sql.DataSource;
 
 @Configuration
-@Profile(value = {"ti", "test-db"})
+@Profile(value = {"test-db"})
 public class MariaDBTestConfig {
 
     @Value("${gerenciador.pedidos.database.name}")
