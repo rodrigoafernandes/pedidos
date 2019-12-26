@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pedidos
+  namespace: pedidos
+data:
+  CONSUL_HOST: 192.168.50.10
