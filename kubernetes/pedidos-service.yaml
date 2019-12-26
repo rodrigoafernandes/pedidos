@@ -1,8 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hotels-backend-service
-  namespace: hotels-backend
+  name: pedidos-service
+  namespace: pedidos
+  labels:
+    app: pedidos
+    service: pedidos
 spec:
   type: ClusterIP
   ports:
@@ -10,5 +13,5 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    name: hotels-backend
+    name: pedidos
 

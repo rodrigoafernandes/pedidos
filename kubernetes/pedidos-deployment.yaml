@@ -1,21 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hotels-backend
-  namespace: hotels-backend
+  name: pedidos-v2
+  namespace: pedidos
+  labels:
+    app: pedidos
+    version: v2
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      name: hotels-backend
+      app: pedidos
+      version: v2
   template:
     metadata:
       labels:
-        name: hotels-backend
+        app: pedidos
+        version: v2
     spec:
+      serviceAccountName: pedidos
       containers:
-      - name: hotels-backend
-        image: 192.168.20.40:5000/gigiodesenvolvimento/hotels-backend:0.1.0
+      - name: pedidos
+        image: rodrigoaf/pedidos:0.1.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
