@@ -9,4 +9,4 @@ scenarios:
     retrieve-resources: false
     think-time: 250ms
     requests:
-      - http://10.96.167.170:8080/estimate/city/1032/hotels/1?startDate=2019-12-10&endDate=2019-12-19&qtGrowUp=2&qtChild=1
+            - http://192.168.20.10:8888/pedidos?numeroPedido=5
