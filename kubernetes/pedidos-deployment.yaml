@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pedidos-v1
+  namespace: pedidos
+  labels:
+    app: pedidos-v1
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pedidos-v1
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: pedidos-v1
+        version: v1
+    spec:
+      serviceAccountName: pedidos
+      containers:
+      - name: pedidos
+        image: rodrigoaf/pedidos:0.0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: 
+          requests:
+            memory: 128Mi
+            cpu: "125m"
+          limits:
+            memory: 256Mi
+            cpu: "250m"
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+            httpHeaders:
+              - name: X-Custom-Header
+                value: ReadinessProbe
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+            httpHeaders:
+              - name: X-Custom-Header
+                value: LivenessProbe
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        env:
+          - name: CONSUL_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: pedidos
+                key: CONSUL_HOST
+          - name: VAULT_SECURITY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: pedidos
+                  key: VAULT_SECURITY_TOKEN
+          - name: VAULT_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: pedidos
+                  key: VAULT_HOST
+          - name: VAULT_SCHEME
+              valueFrom:
+                configMapKeyRef:
+                  name: pedidos
+                  key: VAULT_SCHEME
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+
