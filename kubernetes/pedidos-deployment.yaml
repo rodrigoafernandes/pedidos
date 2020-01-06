@@ -35,33 +35,33 @@ spec:
             cpu: "250m"
         readinessProbe:
           httpGet:
-            path: /health/live
-            port: 8080
-            httpHeaders:
-              - name: X-Custom-Header
-                value: ReadinessProbe
-          initialDelaySeconds: 5
-          periodSeconds: 60
-        livenessProbe:
-          httpGet:
             path: /health/ready
             port: 8080
             httpHeaders:
               - name: X-Custom-Header
+                value: ReadinessProbe
+          initialDelaySeconds: 35
+          periodSeconds: 60
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+            httpHeaders:
+              - name: X-Custom-Header
                 value: LivenessProbe
-          initialDelaySeconds: 5
+          initialDelaySeconds: 35
           periodSeconds: 60
         env:
-          - name: CONSUL_HOST
-            valueFrom:
-              configMapKeyRef:
-                name: pedidos
-                key: CONSUL_HOST
-          - name: VAULT_SECURITY_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: pedidos
-                  key: VAULT_SECURITY_TOKEN
+        - name: CONSUL_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: pedidos
+              key: CONSUL_HOST
+        - name: VAULT_SECURITY_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: pedidos
+              key: VAULT_SECURITY_TOKEN
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
 
