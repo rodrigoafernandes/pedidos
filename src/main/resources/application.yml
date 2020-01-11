@@ -32,6 +32,11 @@ spring:
     table: ${flyway.table}
     baseline-on-migrate: true
 
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 ---
 spring:
   profiles: test-db

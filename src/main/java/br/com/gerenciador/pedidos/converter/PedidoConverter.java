@@ -31,7 +31,7 @@ public class PedidoConverter {
 			Calendar dataCadastroDB = result.get(INTEGER_TWO, Calendar.class);
 			pedidos.add(PedidoDTO.builder().numPedido(result.get(INTEGER_ZERO, Long.class))
 					.cliente(result.get(INTEGER_ONE, String.class)).dataCadastro(LocalDate.of(dataCadastroDB.get(YEAR),
-							dataCadastroDB.get(MONTH + INTEGER_ONE), dataCadastroDB.get(DAY_OF_MONTH)))
+							dataCadastroDB.get(MONTH) + INTEGER_ONE, dataCadastroDB.get(DAY_OF_MONTH)))
 					.valorTotal(ZERO).build());
 		});
 
