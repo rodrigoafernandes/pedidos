@@ -13,4 +13,4 @@ spec:
       - backend:
           serviceName: pedidos-service-v1
           servicePort: 8080
-        path: /v2/gerenciador
+        path: /v1/gerenciador
