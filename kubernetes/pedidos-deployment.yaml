@@ -58,20 +58,20 @@ spec:
                 name: pedidos
                 key: CONSUL_HOST
           - name: VAULT_SECURITY_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: pedidos
-                  key: VAULT_SECURITY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: pedidos
+                key: VAULT_SECURITY_TOKEN
           - name: VAULT_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: pedidos
-                  key: VAULT_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: pedidos
+                key: VAULT_HOST
           - name: VAULT_SCHEME
-              valueFrom:
-                configMapKeyRef:
-                  name: pedidos
-                  key: VAULT_SCHEME
+            valueFrom:
+              configMapKeyRef:
+                name: pedidos
+                key: VAULT_SCHEME
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
 

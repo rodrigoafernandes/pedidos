@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: pedidos-ingress-v1
+  namespace: pedidos
+spec:
+  rules:
+  - host: k8s-master
+    http:
+      paths:
+      - backend:
+          serviceName: pedidos-service-v1
+          servicePort: 8080
+        path: /v2/gerenciador

@@ -24,7 +24,6 @@ spring:
       fail-fast: false
     consul:
       host: ${CONSUL_HOST}
-      port: ${CONSUL_PORT}
       config:
         enabled: true
         prefix: ${spring.application.name}
