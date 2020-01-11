@@ -11,6 +11,6 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: pedidos-service
+          serviceName: pedidos-service-v2
           servicePort: 8080
-        path: /v1/gerenciador
+        path: /v2/gerenciador
