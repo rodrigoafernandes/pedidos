@@ -44,13 +44,21 @@ public class PedidoRepositoryImplTests {
                     .build());
             Cliente cliente = entityManager.merge(Cliente.builder().nome("Cliente " + i).tipoDocumento(PJ)
                     .numeroDocumento("00000000000000").build());
-            Pedido pedido = entityManager.merge(Pedido.builder().codigoCliente(cliente.getCodigo())
+            Pedido pedido = entityManager.merge(Pedido.builder().cliente(cliente)
                     .dataCadastro(getInstance()).build());
-            entityManager.merge(PedidoItem.builder().qtdItem(LONG_ONE).id(PedidoItemPk.builder()
-                    .codigoItem(item.getCodigo()).codigoPedido(pedido.getCodigo()).build()).build());
+
+            entityManager
+                    .createNativeQuery("INSERT INTO GER_PEDIDO_ITEM(CD_ITEM, CD_PEDIDO, QT_ITEM) " +
+                            "VALUES (:codItem, :codPedido, :qtItem)")
+                    .setParameter("codItem", item.getCodigo())
+                    .setParameter("codPedido", pedido.getCodigo())
+                    .setParameter("qtItem", LONG_ONE)
+                    .executeUpdate();
+
         }
 
-        entityManager.merge(Pedido.builder().codigoCliente(LONG_ONE).dataCadastro(dataCadastro).build());
+        entityManager.merge(Pedido.builder().cliente(entityManager.find(Cliente.class, LONG_ONE))
+                .dataCadastro(dataCadastro).build());
     }
 
     @Test

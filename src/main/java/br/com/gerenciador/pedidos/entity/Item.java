@@ -4,12 +4,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -47,5 +44,8 @@ public class Item implements Serializable {
 	@Column(name = "VL_UNITARIO")
 	@Digits(integer = 18, fraction = 2)
 	private BigDecimal valorUnitario;
-	
+
+	@OneToMany(mappedBy = "item")
+	private List<PedidoItem> pedidosItem;
+
 }

@@ -4,13 +4,9 @@ import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -52,5 +48,8 @@ public class Cliente implements Serializable {
 	@Length(max = 14)
 	@Column(name = "NR_DOCUMENTO")
 	private String numeroDocumento;
+
+	@OneToMany(mappedBy = "cliente")
+	private List<Pedido> pedidos;
 	
 }

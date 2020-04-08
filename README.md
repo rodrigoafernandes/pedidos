@@ -7,24 +7,24 @@ Tecnologias utilizadas:
 * [Java 1.8](https://openjdk.java.net/install/)
 * [Quarkus](https://quarkus.io/)
 * [mariaDB](https://mariadb.org/)
-* [QueryDSL](http://www.querydsl.com/)
 * [Lombok](https://projectlombok.org/)
 * [Flyway](https://flywaydb.org/)
 * [Swagger](https://swagger.io/)
 * [Jacoco](https://www.eclemma.org/jacoco/)
 * [Checkstyle](https://checkstyle.sourceforge.io/)
 * [PMD](https://pmd.github.io/)
+* [Gradle](https://gradle.org/)
 
 ### Swagger
 Para acessar a documentação Swagger, basta rodar a aplicação e acessar pelo browser: http://hostname:port/swagger-ui.html.
 
 ### Build da aplicação
 Para buildar a aplicação, basta utilizar o comando: <br/>
-<code>./mvnw clean package</code>
+<code>./gradlew build</code>
 
 ### Executando a aplicação
 Para rodar a aplicação em modo <code>dev</code>, executar o comando.<br/>
-<code>./mvnw compile quarkus:dev</code><br/>
+<code>./gradlew quarkusDev</code><br/>
 Para utilizar a aplicação como um container Docker, primeiro build o container e na sequência execute o container.<br/>
 <code>docker build -f Dockerfile -t gerenciador/pedidos:0.1.0 .</code><br/>
 <code>docker container run -d --name pedidos -p 8080:8080 gerenciador/pedidos:0.1.0</code><br/>

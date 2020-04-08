@@ -1,0 +1,105 @@
+plugins {
+    id "java"
+    id "io.quarkus"
+    id "jacoco"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+jacoco {
+    toolVersion = "${jacocoVersion}"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.destination file("${buildDir}/reports/jacoco")
+    }
+}
+
+jacocoTestCoverageVerification {
+    afterEvaluate {
+        getClassDirectories().setFrom(classDirectories.files.collect {
+            fileTree(dir: it, exclude:  [
+                    '**/dto/*.*',
+                    '**/entity/*.*',
+                    '**/entity/embedded/*.*',
+                    '**/PedidosApplication.*',
+                    '**/health/*.*'
+            ])
+        })
+    }
+
+    violationRules {
+        rule {
+            element = "CLASS"
+            excludes = [
+                    'br.com.gerenciador.pedidos.dto.*',
+                    'br.com.gerenciador.pedidos.entity.*',
+                    'br.com.gerenciador.pedidos.health.*',
+                    'br.com.gerenciador.pedidos.PedidosApplication'
+            ]
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.98
+            }
+        }
+    }
+}
+
+dependencies {
+
+    implementation "io.quarkus:quarkus-resteasy-jsonb"
+    implementation "io.quarkus:quarkus-hibernate-validator"
+    implementation "io.quarkus:quarkus-smallrye-openapi"
+    implementation "io.quarkus:quarkus-smallrye-health"
+    implementation "io.quarkus:quarkus-hibernate-orm"
+    implementation "io.quarkus:quarkus-jdbc-mariadb"
+    implementation "io.quarkus:quarkus-vault"
+    implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "io.quarkus:quarkus-flyway"
+
+    //Lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    implementation("org.projectlombok:lombok:${lombokVersion}")
+
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+
+    //Test
+
+    testImplementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    testImplementation "io.quarkus:quarkus-jdbc-h2"
+    testImplementation "io.quarkus:quarkus-junit5"
+    testImplementation "io.rest-assured:rest-assured"
+    testImplementation "org.mockito:mockito-junit-jupiter:${mockitoJunitJupiterVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoCoreVersion}"
+
+    //Lombok
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    testImplementation("org.projectlombok:lombok:${lombokVersion}")
+}
+
+group "br.com.gerenciador"
+version "0.2.0-SNAPSHOT"
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}

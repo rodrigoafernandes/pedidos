@@ -5,13 +5,9 @@ import static javax.persistence.TemporalType.DATE;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -36,12 +32,16 @@ public class Pedido implements Serializable {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long codigo;
 	
-	@NotNull
-	@Column(name = "CD_CLIENTE")
-	private Long codigoCliente;
+	@ManyToOne
+	@JoinColumn(name = "CD_CLIENTE", referencedColumnName = "CD_CLIENTE", nullable = false)
+	private Cliente cliente;
 	
 	@NotNull
 	@Temporal(DATE)
 	@Column(name = "DT_CADASTRO")
 	private Calendar dataCadastro;
+
+	@OneToMany(mappedBy = "pedido")
+	private List<PedidoItem> pedidosItem;
+
 }

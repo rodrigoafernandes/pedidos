@@ -23,11 +23,11 @@ public class PedidoItemPk implements Serializable {
 	private static final long serialVersionUID = 2982844952008417229L;
 
 	@NotNull
-	@Column(name = "CD_PEDIDO")
+	@Column(name = "CD_PEDIDO", insertable = false, updatable = false)
 	private Long codigoPedido;
 
 	@NotNull
-	@Column(name = "CD_ITEM")
+	@Column(name = "CD_ITEM", insertable = false, updatable = false)
 	private Long codigoItem;
 	
 }

@@ -2,9 +2,9 @@ package br.com.gerenciador.pedidos.converter;
 
 import br.com.gerenciador.pedidos.dto.ItemPedidoDTO;
 import br.com.gerenciador.pedidos.dto.PedidoDTO;
-import com.querydsl.core.Tuple;
 
 import javax.enterprise.context.RequestScoped;
+import javax.persistence.Tuple;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;

@@ -6,27 +6,30 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.jpa.impl.JPAQuery;
+import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import br.com.gerenciador.pedidos.converter.PedidoConverter;
 import br.com.gerenciador.pedidos.dto.FiltroPedidosDTO;
 import br.com.gerenciador.pedidos.dto.ItemPedidoDTO;
 import br.com.gerenciador.pedidos.dto.PedidoDTO;
-import br.com.gerenciador.pedidos.entity.QCliente;
-import br.com.gerenciador.pedidos.entity.QItem;
-import br.com.gerenciador.pedidos.entity.QPedido;
-import br.com.gerenciador.pedidos.entity.QPedidoItem;
+import br.com.gerenciador.pedidos.entity.Cliente;
+import br.com.gerenciador.pedidos.entity.Item;
+import br.com.gerenciador.pedidos.entity.Pedido;
+import br.com.gerenciador.pedidos.entity.PedidoItem;
 import br.com.gerenciador.pedidos.exception.ItensPedidoNotFoundException;
 import br.com.gerenciador.pedidos.exception.PedidosNotFoundException;
 import br.com.gerenciador.pedidos.repository.PedidoRepository;
@@ -40,19 +43,27 @@ public class PedidoRepositoryImpl implements PedidoRepository {
 	@Inject
 	PedidoConverter converter;
 
+	CriteriaBuilder criteriaBuilder;
+
+	@PostConstruct
+	public void setUp() {
+		criteriaBuilder = entityManager.getCriteriaBuilder();
+	}
+
 	@Override
 	public List<PedidoDTO> findByFilter(FiltroPedidosDTO filtro) {
-		JPAQuery<Tuple> query = new JPAQuery<>(entityManager);
+		CriteriaQuery<Tuple> query = criteriaBuilder.createQuery(Tuple.class);
 
-		QPedido pedido = QPedido.pedido;
-		QCliente cliente = QCliente.cliente;
-		QPedidoItem pedidoItem = QPedidoItem.pedidoItem;
-		QItem item = QItem.item;
+		Root<Pedido> pedido = query.from(Pedido.class);
+		Path<Cliente> cliente = pedido.get("cliente");
 
-		query.select(pedido.codigo, cliente.nome, pedido.dataCadastro).from(pedido).innerJoin(cliente)
-				.on(pedido.codigoCliente.eq(cliente.codigo)).where(buildPredicate(filtro, pedido, cliente));
+		pedido.join("cliente");
 
-		List<Tuple> results = query.fetch();
+		query.select(criteriaBuilder.tuple(pedido.get("codigo"), cliente.get("nome"), pedido.get("dataCadastro")));
+
+		query.where(buildPredicate(filtro, pedido, cliente));
+
+		List<Tuple> results = entityManager.createQuery(query).getResultList();
 
 		if (isEmpty(results)) {
 			throw new PedidosNotFoundException("Não foram encontrados pedidos para o filtro informado");
@@ -61,13 +72,20 @@ public class PedidoRepositoryImpl implements PedidoRepository {
 		List<PedidoDTO> pedidos = converter.toPedidoDTO(results);
 
 		pedidos.forEach(pedidoDB -> {
-			JPAQuery<Tuple> queryItens = new JPAQuery<>(entityManager);
+			CriteriaQuery<Tuple> queryItens = criteriaBuilder.createQuery(Tuple.class);
 
-			queryItens.select(item.nome, item.valorUnitario, pedidoItem.qtdItem).from(pedidoItem).innerJoin(item)
-					.on(pedidoItem.id.codigoItem.eq(item.codigo))
-					.where(pedidoItem.id.codigoPedido.eq(pedidoDB.getNumPedido()));
+			Root<PedidoItem> pedidoItem = queryItens.from(PedidoItem.class);
+			Path<Item> item = pedidoItem.get("item");
 
-			List<Tuple> itensResults = queryItens.fetch();
+			queryItens.select(criteriaBuilder.tuple(item.get("nome"), item.get("valorUnitario"),
+					pedidoItem.get("qtdItem")));
+
+			pedidoItem.join("item").on(
+					criteriaBuilder.equal(pedidoItem.get("item").get("codigo"), item.get("codigo")));
+
+			queryItens.where(criteriaBuilder.equal(pedidoItem.get("pedido").get("codigo"), pedidoDB.getNumPedido()));
+
+			List<Tuple> itensResults = entityManager.createQuery(queryItens).getResultList();
 
 			if (isEmpty(itensResults)) {
 				throw new ItensPedidoNotFoundException(
@@ -84,24 +102,25 @@ public class PedidoRepositoryImpl implements PedidoRepository {
 		return pedidos;
 	}
 
-	private Predicate buildPredicate(FiltroPedidosDTO filtro, QPedido pedido, QCliente cliente) {
-		BooleanBuilder predicate = new BooleanBuilder();
+	private Predicate buildPredicate(FiltroPedidosDTO filtro, Root<Pedido> pedido, Path<Cliente> cliente) {
+		List<Predicate> predicates = new ArrayList<>();
 
 		if (filtro.getDataCadastro() != null) {
 			Calendar dataCadastro = Calendar.getInstance();
 			dataCadastro.setTime(Date.from(filtro.getDataCadastro().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-			predicate.and(pedido.dataCadastro.eq(dataCadastro));
+			predicates.add(criteriaBuilder.equal(pedido.get("dataCadastro"), dataCadastro));
 		}
 
 		if (filtro.getNumeroPedido() != null) {
-			predicate.and(pedido.codigo.eq(filtro.getNumeroPedido()));
+			predicates.add(criteriaBuilder.equal(pedido.get("codigo"), filtro.getNumeroPedido()));
 		}
 
 		if (isNotBlank(filtro.getNomeCliente())) {
-			predicate.and(cliente.nome.equalsIgnoreCase(filtro.getNomeCliente()));
+			predicates.add(criteriaBuilder.equal(
+					criteriaBuilder.upper(cliente.get("nome")), filtro.getNomeCliente().toUpperCase()));
 		}
 
-		return predicate;
+		return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 	}
 
 }
